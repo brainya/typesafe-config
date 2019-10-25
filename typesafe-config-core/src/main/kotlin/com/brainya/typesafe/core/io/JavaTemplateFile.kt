@@ -1,21 +1,30 @@
 package com.brainya.typesafe.core.io
 
+import com.brainya.typesafe.core.model.NamedJavaType
 import com.brainya.typesafe.core.model.Node
 import com.brainya.typesafe.core.model.TemplateFile
 import com.brainya.typesafe.core.utils.keepIndentation
+import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 
 
-fun Node<String>.toJavaTemplateFile(basePath: Path) = TemplateFile(
-        path = Paths.get(basePath.toString(), this.data),
-        content = this.toJavaFile()
-)
+fun Node<String>.toJavaTemplateFile( outputFolder:File,javaType: NamedJavaType):TemplateFile {
 
-private fun Node<String>.toJavaFile(): String {
+    val filePath = Paths.get(outputFolder.toString(), javaType.pakage.replace(".","/"),"${javaType.className}.java")
 
-    return """|
-        |public final class ${this.data} {
+    return TemplateFile(
+            path = filePath,
+            content = this.toJavaFile(javaType)
+    )
+}
+
+private fun Node<String>.toJavaFile(javaType: NamedJavaType): String {
+
+    return """
+        |package ${javaType.pakage};
+        |
+        |public final class ${javaType.className} {
         |   <${this.children.flatMap { it.toJavaProperty(listOf()) }.joinToString(separator = "\n")}>
         |}
         """
@@ -24,11 +33,11 @@ private fun Node<String>.toJavaFile(): String {
 }
 
 fun Node<String>.toJavaProperty(parentPath: List<String>): List<String> {
-    if (this.children.isEmpty()) {
+    return if (this.children.isEmpty()) {
         val propertyName = parentPath.map { it.toUpperCase() }.joinToString(separator = "_")
-        return listOf("public static final String $propertyName = \"${this.data}\";")
+        listOf("public static final String $propertyName = \"${this.data}\";")
     } else {
-        return this.children.flatMap {
+        this.children.flatMap {
             it.toJavaProperty(parentPath + this.data)
         }
     }

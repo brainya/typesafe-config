@@ -7,10 +7,10 @@ import java.util.*
 
 object PropertiesFileTransformer : DataTransformer {
 
-    override fun transform(data: String, inputStream: InputStream): Node<String> {
+    override fun transform(inputStream: InputStream): Node<String> {
         val properties: Properties = Properties();
         properties.load(inputStream)
-        return Node(data, properties.toDataPath().toTree(0))
+        return Node("", properties.toDataPath().toTree(0))
     }
 }
 

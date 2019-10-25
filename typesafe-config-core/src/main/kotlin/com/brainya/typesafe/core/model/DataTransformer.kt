@@ -5,6 +5,6 @@ import java.io.InputStream
 
 interface DataTransformer {
 
-    fun transform(data:String, inputStream: InputStream): Node<String>
+    fun transform(inputStream: InputStream): Node<String>
 
 }
