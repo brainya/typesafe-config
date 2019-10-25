@@ -31,9 +31,9 @@ class BuildLogicFunctionalTest {
     fun testGenerateEntitiesTask() {
 
 
-        val apiFile : Path = Paths.get("src/test/resources/someFile.properties").toAbsolutePath()
+        val propertiesFile : Path = Paths.get("src/test/resources/someFile.properties").toAbsolutePath()
 
-        Assertions.assertThat(apiFile).exists()
+        Assertions.assertThat(propertiesFile).exists()
 
         val buildFileContent = """
         |plugins {
@@ -45,11 +45,11 @@ class BuildLogicFunctionalTest {
         |       outputFolder = file('build/generated/java')
         |       configs {
         |           DbConfig {
-        |               propertiesFile = file('$apiFile')
+        |               propertiesFile = file('$propertiesFile')
         |               pakage = "com.brainya.test"
         |           }
         |           SupportInfo {
-        |               propertiesFile = file('$apiFile')
+        |               propertiesFile = file('$propertiesFile')
         |               pakage = 'com.brainya.another.test'
         |           }
         |       }
